@@ -85,15 +85,6 @@ function showNotes() {
    }
 
 
-
-
-
-
-
-
-
-
-
 function deleteNote(index) {
     console.log(`I am deleting this shit`, index);
 
