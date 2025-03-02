@@ -44,7 +44,7 @@ function showNotes() {
     notesObj.forEach(function (element, index) { 
         let v=Object.values(notesheadObj)[index];
         
-        html = `<div class="noteCard my-2 mx-2 card" style="width: 18rem;">
+        html = `<div class="noteCard my-2 mx-2 card" style="width: 90%;">
        <div class="card-body">
            <h3 class="card-title" id="title-${index}">${v}</h3>
            <p class="card-text" id="text-${index}">${element}</p>
@@ -80,7 +80,7 @@ function attach_buttons(){
             let textElem = document.getElementById(`text-${index}`);
             if (this.textContent === "Edit") {
                 titleElem.innerHTML = `<input type="text" class="form-control" id="edit-title-${index}" value="${titleElem.textContent}">`;
-                textElem.innerHTML = `<textarea class="form-control" id="edit-text-${index}">${textElem.textContent}</textarea>`;
+                textElem.innerHTML = `<textarea class="form-control" id="edit-text-${index}" >${textElem.textContent}</textarea>`;
                 this.textContent = "Save";
             } else {
                 let updatedTitle = document.getElementById(`edit-title-${index}`).value;
