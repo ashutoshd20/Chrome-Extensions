@@ -1,4 +1,15 @@
 showNotes(); 
+document.addEventListener("DOMContentLoaded", function () {
+    const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.getElementById("sidebarToggle");
+
+    if (sidebar && toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("show");
+        });
+    }
+});
+
 let addBtn = document.getElementById('addBtn');  //gettting the html of add button
 addBtn.addEventListener("click", function (e) {
     addnotes();
@@ -44,12 +55,13 @@ function showNotes() {
     notesObj.forEach(function (element, index) { 
         let v=Object.values(notesheadObj)[index];
         
-        html = `<div class="noteCard my-2 mx-2 card" style="width: 90%;">
+        html = `<div class="noteCard my-2 mx-2 card" style="width: 90%; margin-left: 10px;">
        <div class="card-body">
-           <h3 class="card-title" id="title-${index}">${v}</h3>
-           <p class="card-text" id="text-${index}">${element}</p>
-           <button data-id="${index}"="e${index}"  class="btn btn-primary edit-btn" id="edit-btn">Edit</button>
-           <button data-id="${index}"="${index}"  class="btn btn-primary delete-btn">Delete</button>
+            <h3 class="card-title" id="title-${index}">${v}</h3>
+            <p class="card-text" id="text-${index}" style="flex: 1;">${element}</p>
+            <button class="btn btn-sm copy-btn" data-id="${index}" title="Copy Text">📋</button>
+            <button data-id="${index}"="e${index}"  class="btn edit-btn" id="edit-btn" title="Edit">✎</button>
+            <button data-id="${index}"="${index}"  class="btn delete-btn" title="Delete">🗑️</button>
        </div>
    </div>`+html;       
 
@@ -78,7 +90,7 @@ function attach_buttons(){
             let index = this.getAttribute("data-id");
             let titleElem = document.getElementById(`title-${index}`);
             let textElem = document.getElementById(`text-${index}`);
-            if (this.textContent === "Edit") {
+            if (this.textContent === "✎") {
                 titleElem.innerHTML = `<input type="text" class="form-control" id="edit-title-${index}" value="${titleElem.textContent}">`;
                 textElem.innerHTML = `<textarea class="form-control" id="edit-text-${index}" >${textElem.textContent}</textarea>`;
                 this.textContent = "Save";
@@ -95,7 +107,24 @@ function attach_buttons(){
             }
         });
     });
+    document.querySelectorAll(".copy-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            let index = this.getAttribute("data-id");
+            let text = document.getElementById(`text-${index}`).innerText;
+    
+            navigator.clipboard.writeText(text).then(() => {
+                this.textContent = "✅";
+                setTimeout(() => {
+                    this.textContent = "📋";
+                }, 1000);
+            }).catch(() => {
+                alert("Failed to copy text");
+            });
+        });
+    });
 }
+
+
 
 function reload() {
     reload = location.reload();

@@ -6,123 +6,174 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'" />
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'" />
+    <style>
+        body {
+            margin: 0;
+            padding: 5px;
+            text-align: left;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            font-family: Arial, sans-serif;
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 200px;
+            background-color: #343a40;
+            color: white;
+            padding-top: 60px;
+            transition: transform 0.3s ease;
+            transform: translateX(-100%);
+            z-index: 999;
+        }
+
+        #sidebar.show {
+            transform: translateX(0);
+        }
+
+        #sidebarToggle {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: #343a40;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: block;
+        }
+
+        .container {
+            background: white;
+            padding: 5px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+            width: 400px;
+        }
+
+        h2 {
+            color: #333;
+            margin: 0;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 5px;
+            width: 350px;
+        }
+
+        .form-group textarea {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+            width: 90%;
+        }
+
+        .btn {
+            padding: 2px 3px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+            padding: 5px 7px;
+            border: none;
+            border-radius: 2px;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .noteCard {
+            background: white;
+            padding: 5px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            margin: 5px 0;
+        }
+
+        .card-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .card-text {
+            margin-bottom: 5px;
+        }
+
+        ul.nav {
+            list-style: none;
+            padding-left: 15px;
+        }
+
+        ul.nav li {
+            margin-bottom: 10px;
+        }
+
+        ul.nav li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        ul.nav li a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body>
 
+    <!-- Sidebar Dashboard -->
+    <div id="sidebar">
+        <ul class="nav">
+            <li><a href="#">📄 Dashboard</a></li>
+            <li><a href="#">📝 Notes</a></li>
+            <li><a href="#">⚙️ Settings</a></li>
+        </ul>
+    </div>
+    <button id="sidebarToggle">☰ Notify</button>
+    <!-- Main Content -->
     <div class="container my-3">
-        <h2>Noteskeeper</h2>
-            <div class="card-body" style="width: 90%;">
-                <h3 class="card-title">Add a Note</h3>
-                <div class="form-group1">
-                     <textarea class="form-control my-1" id="addhead" rows="1"></textarea>
-                </div>
-                <div class="form-group">
-                    <textarea class="form-control" id="addTxt" rows="3" style="width: 90%;"></textarea>
-                </div>
-                <button class="btn btn-primary my-2" id="addBtn">Add Note</button>
+        <div class="card-body" style="width: 90%; margin-left: 10px;">
+            <h3 class="card-title">Add a Note</h3>
+            <div class="form-group1">
+                <textarea class="form-control my-1" id="addhead" rows="1"></textarea>
             </div>
+            <div class="form-group">
+                <textarea class="form-control" id="addTxt" rows="3" style="width: 90%;"></textarea>
+            </div>
+            <button class="btn btn-primary my-2" id="addBtn">Add</button>
+        </div>
         <h2 style="padding-top: 20px;">Your Notes</h2>
         <hr>
 
         <div id="notes" class="row container-fluid">
             <div class="noteCard my-2 mx-2 card" style="width: 350px;">
                 <div class="card-body">
+                    <!-- Notes content here -->
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="script.js"></script>
+
 </body>
-
-<style>
-    body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 5px;
-    background-color: #f4f4f4;
-    text-align: left;
-    width: 400px; /* Default is ~300px */
-    height: 600px;
-}
-
-.container {
-    margin: 0;
-    background: white;
-    padding: 5px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-    color: #333;
-    margin: 0;
-}
-
-.card {
-    background: #fff;
-    border-radius: 8px;
-    padding: 5px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 5px;
-    width: 350px;
-}
-
-.form-group textarea {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: none;
-    width: 90%;
-}
-
-.form-group textarea1 {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: none;
-    width: 45%;
-}
-
-.btn {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-primary {
-    background: #007bff;
-    color: white;
-}
-
-.btn-primary:hover {
-    background: #0056b3;
-}
-
-.noteCard {
-    background: white;
-    padding: 5px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    margin: 5px 0;
-}
-
-.card-title {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.card-text {
-    margin-bottom: 5px;
-}
-
-
-</style>
-
-<script src="script.js"></script>
-
-
 
 </html>
