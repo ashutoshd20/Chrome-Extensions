@@ -147,3 +147,30 @@ function deleteNote(index) {
     localStorage.setItem("noteshead",JSON.stringify(notesheadObj));
     showNotes(); 
 }
+
+document.getElementById("downloadNotes").addEventListener("click", function (e) {
+    e.preventDefault(); // prevent anchor default behavior
+
+    let notes = JSON.parse(localStorage.getItem("notes") || "[]");
+    let heads = JSON.parse(localStorage.getItem("noteshead") || "[]");
+
+    if (notes.length === 0 || heads.length === 0) {
+        alert("No notes available to download.");
+        return;
+    }
+
+    let content = "";
+    for (let i = 0; i < notes.length; i++) {
+        content += `HEADING: ${heads[i]}\nNOTE: ${notes[i]}\n********************************************************\n`;  // heading newline paragraph newline
+    }
+
+    let blob = new Blob([content], { type: "text/plain" });
+    let url = URL.createObjectURL(blob);
+
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = "MyNotes.txt";
+    a.click();
+
+    URL.revokeObjectURL(url);  // cleanup
+});
