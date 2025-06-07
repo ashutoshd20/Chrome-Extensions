@@ -26,33 +26,26 @@ addBtn.addEventListener("click", function (e) {
     addnotes();
 });
 function addnotes() {
-    let notes = localStorage.getItem("notes"); 
-    let noteshead=localStorage.getItem("noteshead");
-    let notesdate=localStorage.getItem("notesdate");
-
-    if (notes == null||noteshead==null||notesdate==null) {
-        notesObj = [];   
-        notesheadObj=[];
-        notesdateObj=[];
+    let notes_list=localStorage.getItem("notes_list");
+    if(notes_list==null){
+        notes_listObj=[];
     }
     else {
-        notesObj = JSON.parse(notes);
-        notesheadObj=JSON.parse(noteshead);
-        notesdateObj=JSON.parse(notesdate);
+        notes_listObj = JSON.parse(notes_list);
     }
 
     let addTxt = document.getElementById("addTxt").value;  
     let addhead=document.getElementById("addhead").value;
     let addDate=document.getElementById('timestamp').value;
+
     if (addTxt=="" && addhead ==""){
         return;
     }
-    notesObj.push(addTxt);  
-    notesheadObj.push(addhead);
-    notesdateObj.push(addDate);
-    localStorage.setItem("notes", JSON.stringify(notesObj)); 
-    localStorage.setItem("noteshead",JSON.stringify(notesheadObj));
-    localStorage.setItem("notesdate",JSON.stringify(notesdateObj));
+
+    let new_note = {'notes':addTxt,'noteshead':addhead,'notesdate':addDate};
+    notes_listObj.push(new_note);
+    localStorage.setItem("notes_list", JSON.stringify(notes_listObj)); 
+
     document.getElementById("addTxt").value = "";  
     document.getElementById("addhead").value= "";
     document.getElementById('timestamp').value = formattedDateTime;
@@ -61,25 +54,21 @@ function addnotes() {
 }
 
 function showNotes() {
-    let notes = localStorage.getItem("notes");  //obtaining the notes list
-    let noteshead = localStorage.getItem("noteshead");
-    let notesdate=localStorage.getItem("notesdate");
+    let notes_list=localStorage.getItem("notes_list");
 
-    if (notes == null||noteshead==null) {
-        notesObj = [];   //creating notes Object 
-        notesheadObj=[]; //creating notes Head Object 
-        notesdateObj=[];
+    if (notes_list==null) {
+        notes_listObj = [];   
     }
     else {
-        notesObj = JSON.parse(notes); //converting strings of notes array to object
-        notesheadObj=JSON.parse(noteshead);
-        notesdateObj=JSON.parse(notesdate);
+        notes_listObj = JSON.parse(notes_list);
     }
     let html = "";
 
-    notesObj.forEach(function (element, index) { 
-        let nhead=Object.values(notesheadObj)[index];
-        let ndate=(Object.values(notesdateObj)[index]).replace("T"," ");
+    for (let index = 0; index < notes_listObj.length; index++) {
+
+        let nhead = notes_listObj[index]['noteshead'];
+        let ndate = (notes_listObj[index]['notesdate']).replace("T"," ");
+        let element =  notes_listObj[index]['notes'];
         
         html = `<div class="noteCard my-2 mx-2 card" style="width: 90%; margin-left: 10px;">
        <div class="card-body">
@@ -92,10 +81,10 @@ function showNotes() {
        </div>
    </div>`+html;       
 
-    });
+    };
 
     let notesElm = document.getElementById('notes');  
-    if (notesObj.length != 0) {
+    if (notes_listObj.length != 0) {
         notesElm.innerHTML = html; 
     }
     else {
@@ -124,12 +113,11 @@ function attach_buttons(){
             } else {
                 let updatedTitle = document.getElementById(`edit-title-${index}`).value;
                 let updatedText = document.getElementById(`edit-text-${index}`).value;
-                let notes = JSON.parse(localStorage.getItem("notes")) || [];
-                let noteshead = JSON.parse(localStorage.getItem("noteshead")) || [];
-                notes[index] = updatedText;
-                noteshead[index] = updatedTitle;
-                localStorage.setItem("notes", JSON.stringify(notes));
-                localStorage.setItem("noteshead", JSON.stringify(noteshead));
+
+                let notes = JSON.parse(localStorage.getItem("notes_list")) || [];
+                notes[index]['notes'] = updatedText;
+                notes[index]['noteshead'] = updatedTitle;
+                localStorage.setItem("notes_list", JSON.stringify(notes));
                 showNotes(); 
             }
         });
@@ -158,45 +146,33 @@ function reload() {
 }
 
 function deleteNote(index) {
-    let notes = localStorage.getItem("notes");  //obtaining the notes list
-    let noteshead = localStorage.getItem("noteshead");
-    let notesdate=localStorage.getItem("notesdate");
+    let notes_list=localStorage.getItem("notes_list");
 
-    if (notes == null||noteshead==null) {
-        notesObj = [];   //creating notes Object 
-        notesheadObj=[]; //creating notes Head Object 
-        notesdateObj=[];
+    if (notes_list==null) {
+        notes_listObj = [];   
     }
     else {
-        notesObj = JSON.parse(notes);  
-        notesheadObj=JSON.parse(noteshead);
-        notesdateObj=JSON.parse(notesdate);
+        notes_listObj = JSON.parse(notes_list);
     }
 
-    notesObj.splice(index, 1); 
-    notesheadObj.splice(index,1);
-    notesdateObj.splice(index,1);
-    localStorage.setItem("notes", JSON.stringify(notesObj));  
-    localStorage.setItem("noteshead",JSON.stringify(notesheadObj));
-    localStorage.setItem("notesdate",JSON.stringify(notesdateObj));
+
+    notes_listObj.splice(index, 1); 
+    localStorage.setItem("notes_list",JSON.stringify(notes_listObj));
     showNotes(); 
 }
 
 document.getElementById("downloadNotes").addEventListener("click", function (e) {
-    e.preventDefault(); // prevent anchor default behavior
+    e.preventDefault();
 
-    let notes = JSON.parse(localStorage.getItem("notes") || "[]");
-    let heads = JSON.parse(localStorage.getItem("noteshead") || "[]");
-    let dates = JSON.parse(localStorage.getItem("notesdate") || "[]");
-
-    if (notes.length === 0 || heads.length === 0) {
+    let notes_list = JSON.parse(localStorage.getItem("notes_list") || "[]");
+    if (notes_list.length === 0) {
         alert("No notes available to download.");
         return;
     }
 
     let content = "";
-    for (let i = 0; i < notes.length; i++) {
-        content += `DATE:${dates[i]} \nHEADING: ${heads[i]}\nNOTE: ${notes[i]}\n********************************************************\n`;  // heading newline paragraph newline
+    for (let i = 0; i < notes_list.length; i++) {
+        content += `DATE:${notes_list[i]['notesdate']} \nHEADING: ${notes_list[i]['noteshead']}\nNOTE: ${notes_list[i]['notes']}\n********************************************************\n`;  // heading newline paragraph newline
     }
 
     let blob = new Blob([content], { type: "text/plain" });
@@ -219,11 +195,10 @@ document.getElementById("uploadNotes").addEventListener("change", function () {
         const content = e.target.result;
 
         const entries = content.split("********************************************************\n");
-        let notes = [];
-        let heads = [];
-        let dates = [];
+        const unotes_list = [];
 
         entries.forEach(entry => {
+            const unote={};
             const dateMatch = entry.match(/DATE:\s*(.*)/);
             const headMatch = entry.match(/HEADING:\s*(.*)/);
             const noteMatch = entry.match(/NOTE:\s*([\s\S]*)/);
@@ -235,39 +210,30 @@ document.getElementById("uploadNotes").addEventListener("change", function () {
             // Avoid pushing completely empty entries
             if (head !== "" || note !== "") {
                 if (head.includes("NOTE:")){
-                    heads.push("");
+                    unote['noteshead']="";
                 }
                 else{
-                    heads.push(head);
+                    unote['noteshead']= head;
                 }
 
                 if (note.includes("HEADING:")){
-                    note.push("");
+                    unote['notes']="";
                 }else{
-                    notes.push(note);
+                    unote['notes']=note;
                 }
-                dates.push(date);
-                
-                
+                unote['notesdate']=date;
+                unotes_list.push(unote);    
             }
         });
 
-        if (heads.length === 0 && notes.length === 0) {
+        if (unotes_list.length === 0) {
             alert("No valid notes found in the file.");
             return;
         }
 
-        const existingNotes = JSON.parse(localStorage.getItem("notes") || "[]");
-        const existingHeads = JSON.parse(localStorage.getItem("noteshead") || "[]");
-        const existingDates = JSON.parse(localStorage.getItem("notesdate") || "[]");
-        const mergedNotes = existingNotes.concat(notes);
-        const mergedHeads = existingHeads.concat(heads);
-        const mergedDates = existingDates.concat(dates);
-
-        localStorage.setItem("notes", JSON.stringify(mergedNotes));
-        localStorage.setItem("noteshead", JSON.stringify(mergedHeads));
-        localStorage.setItem("notesdate", JSON.stringify(mergedDates));
-
+        const existingNotes = JSON.parse(localStorage.getItem("notes_list") || "[]");
+        const mergedNotes = existingNotes.concat(unotes_list);
+        localStorage.setItem("notes_list", JSON.stringify(mergedNotes));
         showNotes();
     };
 
