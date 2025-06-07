@@ -239,3 +239,22 @@ document.getElementById("uploadNotes").addEventListener("change", function () {
 
     reader.readAsText(file);
 });
+
+
+document.getElementById("searchBar").addEventListener("input", function () {
+    const query = this.value.toLowerCase();
+    const allCards = document.querySelectorAll(".noteCard");
+
+    allCards.forEach(card => {
+      const title = card.querySelector(".card-title").textContent.toLowerCase();
+      const text = card.querySelector(".card-text").textContent.toLowerCase();
+
+      if (title.includes(query) || text.includes(query)) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+});
+
+  
