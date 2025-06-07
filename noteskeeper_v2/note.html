@@ -154,7 +154,11 @@
     <div id="sidebar">
         <ul class="nav">
             <!-- <li><a href="#">📝 Notes</a></li> -->
-            <li><a href="#" id="downloadNotes">📄 Download</a></li>
+            <li><a href="#" id="downloadNotes">📄 Download notes</a></li>
+            <li>
+                <label for="uploadNotes" style="cursor: pointer;">⬆️ Upload notes</label>
+                <input type="file" id="uploadNotes" accept=".txt" style="display: none;">
+            </li>
             <li><a href="#">⚙️ Settings</a></li>
         </ul>
     </div>
@@ -165,7 +169,8 @@
         <div class="card-body" style="width: 90%; margin-left: 10px;">
             <h3 class="card-title">Add a Note</h3>
             <div class="form-group1">
-                <textarea class="form-control my-1" id="addhead" rows="1"></textarea>
+                <textarea class="form-control my-1"  style="margin-bottom: -6px;" id="addhead" rows="1"></textarea>
+                <input type="datetime-local" style="margin-left: 6px; margin-bottom: 5px;" id="timestamp" name="timestamp" />
             </div>
             <div class="form-group">
                 <textarea class="form-control" id="addTxt" rows="3" style="width: 90%;"></textarea>
